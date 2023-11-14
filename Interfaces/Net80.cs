@@ -103,6 +103,7 @@ public interface IMySet<T> : IMyCollection<T>, IMyReadOnlySet<T>
     new bool IsProperSubsetOf(IEnumerable<T> other);
     new bool Overlaps(IEnumerable<T> other);
     new bool SetEquals(IEnumerable<T> other);
+    new bool Contains(T value) => ((IMyCollection<T>)this).Contains(value);
 }
 
 #endif
