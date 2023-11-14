@@ -25,7 +25,12 @@ public class MyKeyedCollection : IMyDictionary<string, string>, IMyList<string>
 
     public ICollection<string> Values => _dictionary.Values;
 
-    public int Count => _dictionary.Count;
+    int IMyCollection<string>.Count => _list.Count;
+    int IMyCollection<KeyValuePair<string, string>>.Count => _dictionary.Count;
+
+    // No connection to the implemented collection interfaces, but ends up
+    // implementing the IReadOnlyCollection interfaces for both
+    public virtual int Count => throw new NotImplementedException();
 
     public bool IsReadOnly => false;
 
