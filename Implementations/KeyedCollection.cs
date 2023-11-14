@@ -5,7 +5,12 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Implementations;
 
-public class MyKeyedCollection : IMyDictionary<string, string>, IMyList<string>
+interface IReadOnlyCollectionEx<T> : IMyReadOnlyCollection<T>
+{
+    int IMyReadOnlyCollection<T>.Count => ((IMyCollection<T>)this).Count;
+}
+
+public class MyKeyedCollection : IMyDictionary<string, string>, IMyList<string>, IReadOnlyCollectionEx<string>
 {
     private readonly Dictionary<string, string> _dictionary = new();
     private readonly List<string> _list = new();
@@ -25,7 +30,8 @@ public class MyKeyedCollection : IMyDictionary<string, string>, IMyList<string>
 
     public ICollection<string> Values => _dictionary.Values;
 
-    public int Count => _dictionary.Count;
+    int IMyCollection<string>.Count => _list.Count;
+    int IMyCollection<KeyValuePair<string, string>>.Count => _dictionary.Count;
 
     public bool IsReadOnly => false;
 
