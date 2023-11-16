@@ -84,6 +84,7 @@ public interface IMyDictionary<TKey, TValue> : IMyCollection<KeyValuePair<TKey, 
 
 public interface IMySet<T> : IMyCollection<T>, IMyReadOnlySet<T>
 {
+    bool IMyReadOnlySet<T>.Contains(T item) => ((IMyCollection<T>)this).Contains(item);
     bool IMyReadOnlySet<T>.IsProperSubsetOf(IEnumerable<T> other) => IsProperSubsetOf(other);
     bool IMyReadOnlySet<T>.IsProperSupersetOf(IEnumerable<T> other) => IsProperSupersetOf(other);
     bool IMyReadOnlySet<T>.IsSubsetOf(IEnumerable<T> other) => IsSubsetOf(other);
