@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Interfaces;
 
 #if NET8_0
 
@@ -84,7 +85,7 @@ public interface IMyDictionary<TKey, TValue> : IMyCollection<KeyValuePair<TKey, 
 
 public interface IMySet<T> : IMyCollection<T>, IMyReadOnlySet<T>
 {
-    bool IMyReadOnlySet<T>.Contains(T item) => ((IMyCollection<T>)this).Contains(item);
+    bool IMyReadOnlySet<T>.Contains(T item) => Contains(item);
     bool IMyReadOnlySet<T>.IsProperSubsetOf(IEnumerable<T> other) => IsProperSubsetOf(other);
     bool IMyReadOnlySet<T>.IsProperSupersetOf(IEnumerable<T> other) => IsProperSupersetOf(other);
     bool IMyReadOnlySet<T>.IsSubsetOf(IEnumerable<T> other) => IsSubsetOf(other);
@@ -104,6 +105,15 @@ public interface IMySet<T> : IMyCollection<T>, IMyReadOnlySet<T>
     new bool IsProperSubsetOf(IEnumerable<T> other);
     new bool Overlaps(IEnumerable<T> other);
     new bool SetEquals(IEnumerable<T> other);
+
+    // This is needed because before extending the read-only interfaces IMySet<T>
+    // gets a Contains(T item) method via IMyCollection<T>. Now the call would be
+    // ambiguous, so we need to add a method on this interface which we DIM to
+    // forward to IMyCollection<T>.
+    new bool Contains(T item)
+    {
+        return ((IMyCollection<T>)this).Contains(item);
+    }
 }
 
 #endif
